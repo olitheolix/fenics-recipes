@@ -14,16 +14,16 @@ MAINTAINER fenics-project <fenics@fenicsproject.org>
 ENV HOME /root
 
 RUN cd /tmp/fenics-recipes && conda build swig --python 2.7
-# RUN cd /tmp/fenics-recipes && conda build eigen3 --python 2.7
-# RUN cd /tmp/fenics-recipes && conda build petsc --python 2.7
-# RUN cd /tmp/fenics-recipes && conda build petsc4py --python 2.7
-# RUN cd /tmp/fenics-recipes && conda build slepc --python 2.7
-# RUN cd /tmp/fenics-recipes && conda build instant --python 2.7
-# RUN cd /tmp/fenics-recipes && conda build ufl --python 2.7
-# RUN cd /tmp/fenics-recipes && conda build fiat --python 2.7
-# RUN cd /tmp/fenics-recipes && conda build ffc --python 2.7
-# RUN cd /tmp/fenics-recipes && conda build dolfin --python 2.7
-# RUN cd /tmp/fenics-recipes && conda build fenics --python 2.7
+RUN cd /tmp/fenics-recipes && conda build eigen3 --python 2.7
+RUN cd /tmp/fenics-recipes && conda build petsc --python 2.7
+RUN cd /tmp/fenics-recipes && conda build petsc4py --python 2.7
+RUN cd /tmp/fenics-recipes && conda build slepc --python 2.7
+RUN cd /tmp/fenics-recipes && conda build instant --python 2.7
+RUN cd /tmp/fenics-recipes && conda build ufl --python 2.7
+RUN cd /tmp/fenics-recipes && conda build fiat --python 2.7
+RUN cd /tmp/fenics-recipes && conda build ffc --python 2.7
+RUN cd /tmp/fenics-recipes && conda build dolfin --python 2.7
+RUN cd /tmp/fenics-recipes && conda build fenics --python 2.7
 
 # # Download and install Eigen v3.2.5 library.
 # RUN cd /tmp && \
