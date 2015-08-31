@@ -5,7 +5,7 @@
 # Author:
 # Jack S. Hale <jack.hale@uni.lu>
 
-# >> docker build -t delme -f Dockerfile_anaconda_recipe_py27 .
+# >> docker build -t myfenics_py27 -f Dockerfile_anaconda_recipe_py27 .
 
 # Add a command to automatically replace all occurrences of the non-utf8 names.
 FROM fenics_base_mkl_py27:latest
@@ -13,17 +13,17 @@ MAINTAINER fenics-project <fenics@fenicsproject.org>
 
 ENV HOME /root
 
-RUN cd /tmp/fenics-recipes && conda build swig --python 2.7
-RUN cd /tmp/fenics-recipes && conda build eigen3 --python 2.7
-RUN cd /tmp/fenics-recipes && conda build petsc --python 2.7
-RUN cd /tmp/fenics-recipes && conda build petsc4py --python 2.7
-RUN cd /tmp/fenics-recipes && conda build slepc --python 2.7
-RUN cd /tmp/fenics-recipes && conda build instant --python 2.7
-RUN cd /tmp/fenics-recipes && conda build ufl --python 2.7
-RUN cd /tmp/fenics-recipes && conda build fiat --python 2.7
-RUN cd /tmp/fenics-recipes && conda build ffc --python 2.7
-RUN cd /tmp/fenics-recipes && conda build dolfin --python 2.7
-RUN cd /tmp/fenics-recipes && conda build fenics --python 2.7
+RUN cd /tmp/fenics-recipes && conda build swig
+RUN cd /tmp/fenics-recipes && conda build eigen3
+RUN cd /tmp/fenics-recipes && conda build petsc
+RUN cd /tmp/fenics-recipes && conda build petsc4py
+RUN cd /tmp/fenics-recipes && conda build slepc
+RUN cd /tmp/fenics-recipes && conda build instant
+RUN cd /tmp/fenics-recipes && conda build ufl
+RUN cd /tmp/fenics-recipes && conda build fiat
+RUN cd /tmp/fenics-recipes && conda build ffc
+RUN cd /tmp/fenics-recipes && conda build dolfin
+RUN cd /tmp/fenics-recipes && conda build fenics
 
 # # Download and install Eigen v3.2.5 library.
 # RUN cd /tmp && \
