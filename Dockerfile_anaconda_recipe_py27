@@ -1,0 +1,85 @@
+# Builds a Docker image from source using as many
+# upstream Ubuntu packages as possible.
+# An official build of this Dockerfile is maintained at:
+# https://registry.hub.docker.com/u/fenicsproject/stable-src/
+# Author:
+# Jack S. Hale <jack.hale@uni.lu>
+
+# >> docker build -t delme -f Dockerfile_anaconda_recipe_py27 .
+
+# Add a command to automatically replace all occurrences of the non-utf8 names.
+FROM fenics_base_mkl_py27:latest
+MAINTAINER fenics-project <fenics@fenicsproject.org>
+
+ENV HOME /root
+
+RUN cd /tmp/fenics-recipes && conda build swig --python 2.7
+# RUN cd /tmp/fenics-recipes && conda build eigen3 --python 2.7
+# RUN cd /tmp/fenics-recipes && conda build petsc --python 2.7
+# RUN cd /tmp/fenics-recipes && conda build petsc4py --python 2.7
+# RUN cd /tmp/fenics-recipes && conda build slepc --python 2.7
+# RUN cd /tmp/fenics-recipes && conda build instant --python 2.7
+# RUN cd /tmp/fenics-recipes && conda build ufl --python 2.7
+# RUN cd /tmp/fenics-recipes && conda build fiat --python 2.7
+# RUN cd /tmp/fenics-recipes && conda build ffc --python 2.7
+# RUN cd /tmp/fenics-recipes && conda build dolfin --python 2.7
+# RUN cd /tmp/fenics-recipes && conda build fenics --python 2.7
+
+# # Download and install Eigen v3.2.5 library.
+# RUN cd /tmp && \
+#     mkdir -p eigen/build && \
+#     wget -O eigen.tar.bz2 http://bitbucket.org/eigen/eigen/get/3.2.5.tar.bz2
+# #    tar -C eigen --strip-components=1 -xvjf eigen.tar.bz2 &&\
+# #    cd eigen/build && \
+# #    cmake .. && \
+# #    make install
+
+# # Download, compile, and install SWIG v3.0.7
+# RUN apt-get install -y libpcre3-dev \
+#     && wget http://downloads.sourceforge.net/swig/swig-3.0.7.tar.gz
+#     # && tar -xvzf swig-3.0.7.tar.gz \
+#     # && cd swig-3.0.7 \
+#     # && ./configure \
+#     # && make -j \
+#     # && make install
+
+# # Clone the relevant repos from the Fenics project.
+# RUN cd /tmp && \
+#     git clone https://oliver_nagy@bitbucket.org/fenics-project/ffc.git && \
+#     git clone https://oliver_nagy@bitbucket.org/fenics-project/fiat.git && \
+#     git clone https://oliver_nagy@bitbucket.org/fenics-project/instant.git && \
+#     git clone https://oliver_nagy@bitbucket.org/fenics-project/ufl.git && \
+#     git clone https://oliver_nagy@bitbucket.org/fenics-project/dolfin.git
+
+# # Replace problematic Unicode characters from various author names
+# # in the source files. This will prevent tracebacks with Python3.
+# RUN cd /tmp && \
+#     grep -rli 'Alnæs' * | xargs -i@ sed -i 's/Alnæs/Alnaes/g' @ && \
+#     grep -rli 'Vikstrøm' * | xargs -i@ sed -i 's/Vikstrøm/Vikstrom/g' @
+
+# # Fenics components.
+# RUN cd /tmp/ffc && python setup.py install
+# RUN cd /tmp/fiat && python setup.py install
+# RUN cd /tmp/instant && python setup.py install
+# RUN cd /tmp/ufl && python setup.py install
+# RUN cd /tmp/dolfin && \
+#     mkdir build && cd build && \
+#     cmake ../ -DCMAKE_INSTALL_PREFIX=/usr/local -DPYTHON_EXECUTABLE=`which python` && \
+#     make -j4 && \
+#     make install
+
+# Cleanup to save space
+#RUN apt-get clean && \ 
+#    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Set the HOME environment variable, otherwise import dolfin crashes
+# RUN echo "/root" > /etc/container_environment/HOME
+
+# # Enable X11 forwarding for plotting
+# RUN echo "X11Forwarding yes" >> /etc/ssh/sshd_config
+
+# # Set LIBGL_ALWAYS_INDIRECT to suppress libGL warning message.
+# RUN echo "y" > /etc/container_environment/LIBGL_ALWAYS_INDIRECT
+
+# # Put environment variables into
+# RUN echo "source /usr/local/share/dolfin/dolfin.conf" >> /etc/bash.bashrc
