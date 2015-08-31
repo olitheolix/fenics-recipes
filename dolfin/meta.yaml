@@ -13,7 +13,7 @@ build:
 requirements:
   build:
     - python
-    - mkl
+    - numpy
     - cmake
     - sphinx
     - libxml2
@@ -31,7 +31,7 @@ requirements:
 
   run:
     - python
-    - mkl
+    - numpy
     - libxml2
     - swig >=3.0.3
     - numpy
@@ -51,7 +51,7 @@ test:
     - dolfin
 
   requires:
-    - mkl
+    - numpy
 
 about:
   home: http://www.fenicsproject.org

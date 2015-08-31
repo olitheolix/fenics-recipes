@@ -13,7 +13,7 @@ build:
 requirements:
   build:
     - python
-    - mkl
+    - numpy
     - petsc ==3.5.2
 
   run:
@@ -26,7 +26,7 @@ test:
     - petsc4py.lib
 
   requires:
-    - mkl
+    - numpy
 
 about:
   home: https://bitbucket.org/petsc/petsc4py/

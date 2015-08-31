@@ -13,12 +13,12 @@ build:
 requirements:
   build:
     - python
-    - mkl
+    - numpy
     - mpi4py
 
   run:
     - python
-    - mkl
+    - numpy
     - mpi4py
 
 about:
