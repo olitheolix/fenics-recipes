@@ -3,7 +3,7 @@
 export SLEPC_DIR=$PWD
 export PETSC_DIR=$PREFIX
 
-./configure --prefix=$PREFIX
+/opt/conda/bin/python configure --prefix=$PREFIX
 make SLEPC_DIR=$PWD PETSC_DIR=$PREFIX
 make SLEPC_DIR=$PWD PETSC_DIR=$PREFIX install
 

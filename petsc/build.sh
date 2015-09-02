@@ -2,7 +2,7 @@
 
 export LIBRARY_PATH=$PREFIX/lib
 
-./configure \
+/opt/conda/bin/python configure \
   --prefix=$PREFIX \
   --with-blas-lapack-dir=$LIBRARY_PATH \
   --download-suitesparse \
