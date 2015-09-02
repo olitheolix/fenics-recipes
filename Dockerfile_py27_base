@@ -52,11 +52,11 @@ RUN apt-get install -y nano petsc-dev
 
 # Clone the relevant repos from the Fenics project.
 RUN cd /tmp && \
-    git clone https://oliver_nagy@bitbucket.org/fenics-project/ffc.git && \
-    git clone https://oliver_nagy@bitbucket.org/fenics-project/fiat.git && \
-    git clone https://oliver_nagy@bitbucket.org/fenics-project/instant.git && \
-    git clone https://oliver_nagy@bitbucket.org/fenics-project/ufl.git && \
-    git clone https://oliver_nagy@bitbucket.org/fenics-project/dolfin.git
+    git clone https://github.com/FEniCS/ffc.git && \
+    git clone https://github.com/FEniCS/fiat.git && \
+    git clone https://github.com/FEniCS/instant.git && \
+    git clone https://github.com/FEniCS/ufl.git && \
+    git clone https://github.com/FEniCS/dolfin.git
 
 # Replace problematic Unicode characters from various author names
 # in the source files. This will prevent tracebacks with Python3.
