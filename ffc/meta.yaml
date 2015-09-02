@@ -22,9 +22,9 @@ requirements:
     - python
     - numpy
     - swig >=3.0.3
-    - ufl ==1.6.0
-    - fiat ==1.6.0
-    - instant ==1.6.0
+    - ufl
+    - fiat
+    - instant
 
 test:
   imports:

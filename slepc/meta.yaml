@@ -14,11 +14,11 @@ build:
 requirements:
   build:
     - python
-    - petsc <=3.6.0
+    - petsc
 
   run:
     - python
-    - petsc <=3.6.0
+    - petsc
 
 about:
   home: http://www.grycap.upv.es/slepc/

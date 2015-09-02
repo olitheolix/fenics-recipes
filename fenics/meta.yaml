@@ -4,11 +4,11 @@ package:
 
 requirements:
   run:
-    - dolfin ==1.6.0
-    - ffc ==1.6.0
-    - fiat ==1.6.0
-    - ufl ==1.6.0
-    - instant ==1.6.0
+    - dolfin
+    - ffc
+    - fiat
+    - ufl
+    - instant
 
 about:
   home: http://www.fenicsproject.org
