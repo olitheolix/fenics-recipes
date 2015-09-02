@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export SLEPC_DIR=$PWD
+export PETSC_DIR=$PREFIX
+
 ./configure --prefix=$PREFIX
 make SLEPC_DIR=$PWD PETSC_DIR=$PREFIX
 make SLEPC_DIR=$PWD PETSC_DIR=$PREFIX install

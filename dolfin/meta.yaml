@@ -25,9 +25,9 @@ requirements:
     - ply
     - boost
     - eigen3
-    - petsc <=3.5.2
-    - petsc4py <=3.5.1
-    - slepc <=3.5.4
+    - petsc <=3.6.0
+    - petsc4py <=3.6.0
+    - slepc <=3.6.0
 
   run:
     - python
@@ -40,9 +40,9 @@ requirements:
     - ply
     - boost
     - eigen3
-    - petsc <=3.5.2
-    - petsc4py <=3.5.1
-    - slepc <=3.5.4
+    - petsc <=3.6.0
+    - petsc4py <=3.6.0
+    - slepc <=3.6.0
 
 test:
   imports:

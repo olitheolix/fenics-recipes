@@ -18,7 +18,8 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 CMD ["/sbin/my_init"]
 
 
-RUN cd /tmp/fenics-recipes && conda build petsc petsc4py --python 2.7 --no-test
+RUN cd /tmp/fenics-recipes && conda build petsc --python 2.7 --no-test
+RUN cd /tmp/fenics-recipes && conda build petsc4py --python 2.7 --no-test
 RUN cd /tmp/fenics-recipes && conda build slepc --python 2.7 --no-test
 RUN cd /tmp/fenics-recipes && conda build instant ufl fiat ffc dolfin fenics --python 2.7 --no-test
 
