@@ -5,10 +5,10 @@
 # Author:
 # Jack S. Hale <jack.hale@uni.lu>
 
-# >> docker build -t fenics_base -f Dockerfile_py27_base .
+# >> docker build -t fenics27 -f Dockerfile_py27 .
 
 # Add a command to automatically replace all occurrences of the non-utf8 names.
-FROM continuumio/anaconda:latest
+FROM fenics_base:latest
 MAINTAINER fenics-project <fenics@fenicsproject.org>
 
 ENV HOME /root
@@ -17,64 +17,9 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 CMD ["/sbin/my_init"]
 
-RUN apt-get update
-RUN conda update -y conda
 
-# Compiler ecosystem.
-RUN apt-get install -y \
-    build-essential \
-    cmake \
-    git \
-    pkg-config \
-    wget
-
-# Additional dependencies.
-RUN apt-get install -y \
-    libboost-filesystem-dev \
-    libboost-iostreams-dev \
-    libboost-timer-dev \
-    libcgal-dev \
-    nano \
-    petsc-dev
-
-# RUN conda install -y conda-build
-
-# RUN conda create -n fenics27 python=2.7 numpy=1.9
-# RUN conda create -n fenics34 python=3.4 numpy=1.9
-# RUN conda install -n fenics27 -y \
-#     cmake \
-#     jinja2 \
-#     numpy \
-#     ply \
-#     six \
-#     sympy
-
-# RUN conda install -n fenics34 -y \
-#     cmake \
-#     jinja2 \
-#     numpy \
-#     ply \
-#     six \
-#     sympy
-
-# Clone the relevant repos from the Fenics project.
-RUN cd /tmp && \
-    git clone https://oliver_nagy@bitbucket.org/fenics-project/ffc.git && \
-    git clone https://oliver_nagy@bitbucket.org/fenics-project/fiat.git && \
-    git clone https://oliver_nagy@bitbucket.org/fenics-project/instant.git && \
-    git clone https://oliver_nagy@bitbucket.org/fenics-project/ufl.git && \
-    git clone https://oliver_nagy@bitbucket.org/fenics-project/dolfin.git
-
-# Replace problematic Unicode characters from various author names
-# in the source files. This will prevent tracebacks with Python3.
-RUN cd /tmp && \
-    grep -rli 'Alnæs' * | xargs -i@ sed -i 's/Alnæs/Alnaes/g' @ && \
-    grep -rli 'Vikstrøm' * | xargs -i@ sed -i 's/Vikstrøm/Vikstrom/g' @
-
-
-RUN conda install -y conda-build
-ADD . /tmp/fenics-recipes
-
+RUN cd /tmp/fenics-recipes && conda build eigen3 swig petsc petsc4py slepc --python 2.7 --no-test
+RUN cd /tmp/fenics-recipes && conda build instant ufl fiat ffc dolfin fenics --python 2.7 --no-test
 
 # RUN conda install -y -n fenics27 mpich2=1.4.1p1 mpi4py=1.3.1 numpy=1.9.2 numexpr=2.3.1 scipy=0.16.0 scikit-learn=0.15.2
 # RUN conda install -y -n fenics34 mpich2=1.4.1p1 mpi4py=1.3.1 numpy=1.9.2 numexpr=2.3.1 scipy=0.16.0 scikit-learn=0.15.2
