@@ -3,9 +3,11 @@ package:
   version: "1.6.0"
 
 source:
-  fn: dolfin-1.6.0.tar.gz
-  url: https://bitbucket.org/fenics-project/dolfin/downloads/dolfin-1.6.0.tar.gz
-  md5: 35cb4baf7ab4152a40fb7310b34d5800
+#  fn: dolfin-1.6.0.tar.gz
+#  url: https://bitbucket.org/fenics-project/dolfin/downloads/dolfin-1.6.0.tar.gz
+#  md5: 35cb4baf7ab4152a40fb7310b34d5800
+  path: /tmp/dolfin
+
 
 build:
   number: 1

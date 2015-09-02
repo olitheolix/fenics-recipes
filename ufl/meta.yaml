@@ -3,9 +3,10 @@ package:
   version: "1.6.0"
 
 source:
-  fn: ufl-1.6.0.tar.gz
-  url: https://bitbucket.org/fenics-project/ufl/downloads/ufl-1.6.0.tar.gz
-  md5: c40c5f04eaa847377ab2323122284016
+#  fn: ufl-1.6.0.tar.gz
+#  url: https://bitbucket.org/fenics-project/ufl/downloads/ufl-1.6.0.tar.gz
+#  md5: c40c5f04eaa847377ab2323122284016
+  path: /tmp/ufl
 
 build:
   number: 1

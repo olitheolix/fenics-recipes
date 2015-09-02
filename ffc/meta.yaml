@@ -3,9 +3,11 @@ package:
   version: "1.6.0"
 
 source:
-  fn: ffc-1.6.0.tar.gz
-  url: https://bitbucket.org/fenics-project/ffc/downloads/ffc-1.6.0.tar.gz
-  md5: 358faa3e9da62a1b1a717070217b793e
+#  fn: ffc-1.6.0.tar.gz
+#  url: https://bitbucket.org/fenics-project/ffc/downloads/ffc-1.6.0.tar.gz
+#  md5: 358faa3e9da62a1b1a717070217b793e
+  path: /tmp/ffc
+
 
 build:
   number: 1
