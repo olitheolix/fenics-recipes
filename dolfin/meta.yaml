@@ -14,35 +14,35 @@ build:
 
 requirements:
   build:
-    - python
-    - numpy
-    - cmake
-    - sphinx
-    - libxml2
-    - swig >=3.0.3
-    - numpy
-    - ffc
-    - ply
     - boost
+    - cmake
     - eigen3
+    - ffc
+    - libxml2
+    - numpy
     - petsc
     - petsc4py
+    - ply
+    - python
+    - qt
     - slepc
+    - sphinx
+    - swig >=3.0.3
 
   run:
-    - python
-    - numpy
-    - libxml2
-    - swig >=3.0.3
-    - numpy
-    - ffc
-    - ufl
-    - ply
     - boost
     - eigen3
+    - ffc
+    - libxml2
+    - numpy
     - petsc
     - petsc4py
+    - ply
+    - python
+    - qt
     - slepc
+    - swig >=3.0.3
+    - ufl
 
 test:
   imports:
