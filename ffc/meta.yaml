@@ -3,9 +3,6 @@ package:
   version: "1.6.0"
 
 source:
-#  fn: ffc-1.6.0.tar.gz
-#  url: https://bitbucket.org/fenics-project/ffc/downloads/ffc-1.6.0.tar.gz
-#  md5: 358faa3e9da62a1b1a717070217b793e
   path: /tmp/ffc
 
 
@@ -14,17 +11,17 @@ build:
 
 requirements:
   build:
-    - python
     - numpy
+    - python
     - swig >=3.0.3
 
   run:
-    - python
-    - numpy
-    - swig >=3.0.3
-    - ufl
     - fiat
     - instant
+    - numpy
+    - python
+    - swig >=3.0.3
+    - ufl
 
 test:
   imports:
@@ -35,7 +32,6 @@ test:
     - ffc.errorcontrol
     - ffc.quadrature
     - ffc.tensor
-    #- ffc_time_ext.time_elements_ext  # See #47
     - ufc
 
   commands:

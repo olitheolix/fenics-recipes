@@ -1,15 +1,21 @@
 #!/bin/bash
 
+export INCLUDE_PATH=$PREFIX/include
+export LIBRARY_PATH=$PREFIX/lib
+
+export AMD_DIR=$SP_DIR/petsc
+export BLAS_DIR=$LIBRARY_PATH
+export UMFPACK_DIR=$SP_DIR/petsc
+
+# Dolfin requires the build directory be different from the source
+# directory.
 mkdir build
 cd build
 
-export LIBRARY_PATH=$PREFIX/lib
-export INCLUDE_PATH=$PREFIX/include
-
-export BLAS_DIR=$LIBRARY_PATH
-export AMD_DIR=$SP_DIR/petsc
-export UMFPACK_DIR=$SP_DIR/petsc
-
+# Specify installation- and library paths to ensure cmake uses the
+# Anaconda environment instead of the system environment. Also
+# explicitly disable all libraries that we have not installed in the
+# container.
 cmake .. \
   -DCMAKE_INSTALL_PREFIX=$PREFIX \
   -DCMAKE_INCLUDE_PATH=$INCLUDE_PATH \
@@ -21,4 +27,7 @@ cmake .. \
   -DDOLFIN_ENABLE_PARMETIS:BOOL=OFF \
   -DDOLFIN_ENABLE_HDF5:BOOL=OFF
 
-make -j4 install
+# Compile multi thread to speed up the build. However, this may cause
+# problems if too many cores are used. For instance, with 16GB RAM and
+# 8 cores the compilation runs out of memory.
+make -j$((CPU_COUNT / 2)) install

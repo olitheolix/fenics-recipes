@@ -5,21 +5,20 @@ package:
 source:
   fn: petsc-lite-3.6.0.tar.gz
   url: http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-3.6.0.tar.gz
-#  md5: d707336a98d7cb31d843804d020edc94
 
 build:
   number: 1
 
 requirements:
   build:
-    - python
-    - numpy
     - mpi4py
+    - numpy
+    - python
 
   run:
-    - python
-    - numpy
     - mpi4py
+    - numpy
+    - python
 
 about:
   home: http://www.mcs.anl.gov/petsc/

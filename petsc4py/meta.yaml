@@ -5,20 +5,19 @@ package:
 source:
   fn: petsc4py-3.6.0.tar.gz
   url: https://bitbucket.org/petsc/petsc4py/downloads/petsc4py-3.6.0.tar.gz
-#  md5: fb5e7bda87dafb2ff0ee89da56873658
 
 build:
   number: 1
 
 requirements:
   build:
-    - python
     - numpy
     - petsc
+    - python
 
   run:
-    - python
     - petsc
+    - python
 
 test:
   imports:

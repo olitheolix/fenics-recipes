@@ -3,9 +3,6 @@ package:
   version: "1.6.0"
 
 source:
-#  fn: instant-1.6.0.tar.gz
-#  url: https://bitbucket.org/fenics-project/instant/downloads/instant-1.6.0.tar.gz
-#  md5: 5f2522eb032a5bebbad6597b6fe0732a
   path: /tmp/instant
 
 build:
@@ -16,11 +13,9 @@ requirements:
     - python
 
   run:
-    - python
-    - numpy
-    #- make
     - cmake
-    #- pkg-config
+    - numpy
+    - python
     - swig
 
 test:
