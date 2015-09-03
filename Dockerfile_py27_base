@@ -33,10 +33,32 @@ RUN git clone https://github.com/FEniCS/ffc.git && \
     git clone https://github.com/FEniCS/ufl.git && \
     git clone https://github.com/FEniCS/dolfin.git
 
+# Replace problematic Unicode characters in the FEniCS sources (only
+# author names at this point). This will avoid a traceback with Python 3.
+RUN grep -rli 'Alnæs' * | xargs -i@ sed -i 's/Alnæs/Alnaes/g' @ && \
+    grep -rli 'Vikstrøm' * | xargs -i@ sed -i 's/Vikstrøm/Vikstrom/g' @
+
+# Specify the FEniCS branch to select specific versions (eg "master" or
+# "1.6.0"), as well as the version given to the Anaconda packages.
+ENV FENICS_BRANCH "master"
+ENV FENICS_ANACONDA_PACKAGE_VERSION '"1.7.0dev"'
+
+# Check out the specified versions in the Git repos.
+RUN cd /tmp/ffc && git checkout $FENICS_BRANCH && \
+    cd /tmp/fiat && git checkout $FENICS_BRANCH && \
+    cd /tmp/instant && git checkout $FENICS_BRANCH && \
+    cd /tmp/ufl && git checkout $FENICS_BRANCH && \
+    cd /tmp/dolfin && git checkout $FENICS_BRANCH
+
 # Add the recipes from the current directory.
 ADD . /tmp/fenics-recipes
 
-# Build auxiliary packages. These are not FEniCS specific but Anaconda
-# has either no default (Eigen3) or it is too old (SWIG). Therfore, we
-# build our own from the just added set of recipes.
-RUN cd /tmp/fenics-recipes && conda build eigen3 swig --python 2.7 --python 3.4 --no-test
+# Set the correct version string in all the FEniCS packages we are
+# going to build.
+RUN cd /tmp/fenics-recipes && \
+    sed -i -e "s/version:.*/version: $FENICS_ANACONDA_PACKAGE_VERSION/g" ffc/meta.yaml && \
+    sed -i -e "s/version:.*/version: $FENICS_ANACONDA_PACKAGE_VERSION/g" fiat/meta.yaml && \
+    sed -i -e "s/version:.*/version: $FENICS_ANACONDA_PACKAGE_VERSION/g" instant/meta.yaml && \
+    sed -i -e "s/version:.*/version: $FENICS_ANACONDA_PACKAGE_VERSION/g" ufl/meta.yaml && \
+    sed -i -e "s/version:.*/version: $FENICS_ANACONDA_PACKAGE_VERSION/g" dolfin/meta.yaml && \
+    sed -i -e "s/version:.*/version: $FENICS_ANACONDA_PACKAGE_VERSION/g" fenics/meta.yaml
