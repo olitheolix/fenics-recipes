@@ -1,0 +1,38 @@
+package:
+  name: slepc4py
+  version: "3.6.0"
+
+source:
+  fn: slpec4py-3.6.0.tar.gz
+  url: https://bitbucket.org/slepc/slepc4py/downloads/slepc4py-3.6.0.tar.gz
+
+build:
+  number: 1
+
+requirements:
+  build:
+    - numpy
+    - petsc
+    - python
+    - slepc
+
+  run:
+    - petsc
+    - python
+    - slepc
+
+test:
+  imports:
+    - slepc4py
+
+  requires:
+    - numpy
+
+about:
+  home: https://bitbucket.org/petsc/slepc4py/
+  license: BSD License
+  summary: 'SLEPc for Python'
+
+# See
+# http://docs.continuum.io/conda/build.html for
+# more information about meta.yaml
