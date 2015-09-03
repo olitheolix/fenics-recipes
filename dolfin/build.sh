@@ -27,7 +27,10 @@ cmake .. \
   -DDOLFIN_ENABLE_PARMETIS:BOOL=OFF \
   -DDOLFIN_ENABLE_HDF5:BOOL=OFF
 
-# Compile multi thread to speed up the build. However, this may cause
-# problems if too many cores are used. For instance, with 16GB RAM and
-# 8 cores the compilation runs out of memory.
-make -j$((CPU_COUNT / 2)) install
+# Limit compilation to 4 threads; otherwise it goes haywire on my
+# machine (8 cores 16GB RAM).
+if [ $CPU_COUNT -gt 4 ] ; then
+    CPU_COUNT=4
+fi
+
+make -j$CPU_COUNT install
