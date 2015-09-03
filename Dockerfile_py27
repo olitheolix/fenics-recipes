@@ -11,12 +11,7 @@
 FROM fenics_base:latest
 MAINTAINER fenics-project <fenics@fenicsproject.org>
 
-ENV HOME /root
-
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-
-CMD ["/sbin/my_init"]
-
+RUN apt-get install -y libblas-dev liblapack-dev libptscotch-dev gfortran
 
 RUN cd /tmp/fenics-recipes && conda build --python 2.7 --python 3.4 --no-test petsc
 RUN cd /tmp/fenics-recipes && conda build --python 2.7 --python 3.4 --no-test petsc4py
