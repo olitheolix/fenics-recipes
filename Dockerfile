@@ -1,7 +1,7 @@
 # Second of two Dockerfile to build Anaconda packages for FEniCS.
 #
 # Build with:
-#   >> docker build -t fenics27 -f Dockerfile_fenics .
+#   >> docker build -t fenics -f Dockerfile .
 # 
 # Author: Oliver Nagy <olitheolix@gmail.com>
 FROM fenics_base:latest
