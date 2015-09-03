@@ -1,23 +1,31 @@
-# Builds a Docker image from source using as many
-# upstream Ubuntu packages as possible.
-# An official build of this Dockerfile is maintained at:
-# https://registry.hub.docker.com/u/fenicsproject/stable-src/
-# Author:
-# Jack S. Hale <jack.hale@uni.lu>
-
-# >> docker build -t fenics27 -f Dockerfile_py27 .
-
-# Add a command to automatically replace all occurrences of the non-utf8 names.
+# Second of two Dockerfile to build Anaconda packages for FEniCS.
+#
+# Build with:
+#   >> docker build -t fenics27 -f Dockerfile_fenics .
+# 
+# Author: Oliver Nagy <olitheolix@gmail.com>
 FROM fenics_base:latest
-MAINTAINER fenics-project <fenics@fenicsproject.org>
+MAINTAINER Oliver Nagy <olitheolix@gmail.com>
 
+# Additional build dependencies; BLAS/LAPACK for PETSc and libptscotch/gfortran for Dolfin.
 RUN apt-get install -y libblas-dev liblapack-dev libptscotch-dev gfortran
 
-RUN cd /tmp/fenics-recipes && conda build --python 2.7 --python 3.4 --no-test petsc
-RUN cd /tmp/fenics-recipes && conda build --python 2.7 --python 3.4 --no-test petsc4py
-RUN cd /tmp/fenics-recipes && conda build --python 2.7 --python 3.4 --no-test slepc
-RUN cd /tmp/fenics-recipes && conda build --python 2.7 --python 3.4 --no-test instant ufl fiat ffc
-RUN cd /tmp/fenics-recipes && conda build --python 2.7 --python 3.4 --no-test dolfin
-RUN cd /tmp/fenics-recipes && conda build --python 2.7 --python 3.4 --no-test fenics
+WORKDIR /tmp/fenics-recipes
 
-RUN conda create -y -n f27 python=2.7 numpy=1.9 && conda create -y -n f34 python=3.4 numpy=1.9
+# Build pre-requisite packages for FEniCS.
+RUN conda build --python 2.7 --python 3.4 --no-test petsc
+RUN conda build --python 2.7 --python 3.4 --no-test petsc4py
+RUN conda build --python 2.7 --python 3.4 --no-test slepc
+
+# Build the FEniCS packages.
+RUN conda build --python 2.7 --python 3.4 --no-test instant ufl fiat ffc
+RUN conda build --python 2.7 --python 3.4 --no-test dolfin
+
+# Meta package that combines all required packages for FEniCS.
+RUN conda build --python 2.7 --python 3.4 --no-test fenics
+
+# Create a test environments and install the packages into them.
+RUN conda create -y -n f27 python=2.7 numpy=1.9 && conda install -n f27 --use-local ffc fiat instant ufl dolfin
+RUN conda create -y -n f34 python=3.4 numpy=1.9 && conda install -n f34 --use-local ffc fiat instant ufl dolfin
+RUN bash -c "source activate f27 && python -c 'import dolfin'"
+RUN bash -c "source activate f34 && python -c 'import dolfin'"

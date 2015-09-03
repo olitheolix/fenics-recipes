@@ -1,54 +1,42 @@
-# Builds a Docker image from source using as many
-# upstream Ubuntu packages as possible.
-# An official build of this Dockerfile is maintained at:
-# https://registry.hub.docker.com/u/fenicsproject/stable-src/
-# Author:
-# Jack S. Hale <jack.hale@uni.lu>
-
-# >> docker build -t fenics_base -f Dockerfile_py27_base .
-
-# Add a command to automatically replace all occurrences of the non-utf8 names.
+# First of two Dockerfile to build Anaconda packages for FEniCS.
+#
+# Build with:
+#   >> docker build -t fenics_base -f Dockerfile_base .
+# 
+# Author: Oliver Nagy <olitheolix@gmail.com>
 FROM continuumio/anaconda:latest
-MAINTAINER fenics-project <fenics@fenicsproject.org>
+MAINTAINER Oliver Nagy <olitheolix@gmail.com>
 
+# Admin.
 ENV HOME /root
-
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-
 CMD ["/bin/bash"]
 
-RUN apt-get update
-RUN conda update -y conda
+# Replace the default shell with Bash.
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-# Compiler ecosystem.
-RUN apt-get install -y \
+# Install the necessary Ubuntu- and Ancaconda libraries to build packages.
+RUN apt-get update && apt-get install -y \
     build-essential \
     git \
+    nano \
     pkg-config \
     wget
+RUN conda install -y conda-build
 
-# Additional dependencies.
-RUN apt-get install -y nano
+# Download the source files and repositories to /tmp
+WORKDIR /tmp
 
-# Clone the relevant repos from the Fenics project.
-RUN cd /tmp && \
-    git clone https://github.com/FEniCS/ffc.git && \
+# Clone the relevant repos from the FEniCS project.
+RUN git clone https://github.com/FEniCS/ffc.git && \
     git clone https://github.com/FEniCS/fiat.git && \
     git clone https://github.com/FEniCS/instant.git && \
     git clone https://github.com/FEniCS/ufl.git && \
     git clone https://github.com/FEniCS/dolfin.git
 
-# Replace problematic Unicode characters from various author names
-# in the source files. This will prevent tracebacks with Python3.
-RUN cd /tmp && \
-    grep -rli 'Alnæs' * | xargs -i@ sed -i 's/Alnæs/Alnaes/g' @ && \
-    grep -rli 'Vikstrøm' * | xargs -i@ sed -i 's/Vikstrøm/Vikstrom/g' @
-
-RUN conda install -y conda-build
+# Add the recipes from the current directory.
 ADD . /tmp/fenics-recipes
 
+# Build auxiliary packages. These are not FEniCS specific but Anaconda
+# has either no default (Eigen3) or it is too old (SWIG). Therfore, we
+# build our own from the just added set of recipes.
 RUN cd /tmp/fenics-recipes && conda build eigen3 swig --python 2.7 --python 3.4 --no-test
-
-# Cleanup to save space
-#RUN apt-get clean && \ 
-#    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
