@@ -50,3 +50,10 @@ RUN conda create -y -n py34 python=3.4 numpy=1.9 && conda install -n py34 --use-
 # Verify that Dolfin imports without error in both Python versions.
 RUN bash -c "source activate py27 && python -c 'import dolfin'"
 RUN bash -c "source activate py34 && python -c 'import dolfin'"
+
+# Print upload instructions when logging into the container.
+CMD echo "To upload packages to Anaconda.org:" && \
+    echo "  >> cd /opt/conda/conda-bld/linux-64" && \
+    echo "  >> anaconda login" && \
+    echo "  >> anaconda upload eigen3* swig* petsc* slepc* instant* ufl* fiat* ffc* dolfin* fenics*" && \
+    bash
