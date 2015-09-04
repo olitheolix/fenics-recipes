@@ -23,11 +23,12 @@ experimental - you have been warned :)
 
 The Anaconda packages require a few system libraries that I could not figure
 out how to distribute via Anaconda. These are BLAS/LAPACK, Scotch, and a
-Fortran compiler. On Ubuntu 14.04 you can install them all with
-`$ apt-get install -y liblapack-dev libptscotch-dev gfortran pkg-config
+Fortran compiler. On Ubuntu 14.04 you can install everything with:
 
-Then install FEniCS from my Anaconda.org channel
-`$ conda install -c https://conda.anaconda.org/olitheolix fenics
+.. code-block:: bash
+
+   apt-get install -y liblapack-dev libptscotch-dev gfortran pkg-config
+   conda install -c https://conda.anaconda.org/olitheolix fenics
 
 
 ## Building the Packages
@@ -51,9 +52,11 @@ when you want to tune recipes and build the locally first.
 
 Clone this repository, modify the recipes (if you want), and then build the two
 containers with these commands:
-`$ git clone https://github.com/olitheolix/fenics-recipes.git
-`$ docker build -t fenics_base -f Dockerfile_base .
-`$ docker build -t fenics .
+
+.. code-block:: bash
+   git clone https://github.com/olitheolix/fenics-recipes.git
+   docker build -t fenics_base -f Dockerfile_base .
+   docker build -t fenics .
 
 Note: the `-f` option is only supported in newer versions of Docker. You may
 need to upgrade first, or rename `Dockerfile_base` to `Dockerfile` and build
@@ -61,5 +64,7 @@ without the `-f` option.
 
 
 ### Option 2: Recipes from GitHub
-Copy the `docker/Dockerfile` somewhere and run
-`$ docker build -t fenics .
+Copy the `docker/Dockerfile` somewhere and run:
+
+.. code-block:: bash
+   docker build -t fenics .
