@@ -1,9 +1,3 @@
-# First of two Dockerfile to build Anaconda packages for FEniCS.
-#
-# Build instructions:
-#   >> docker build -t fenics_base -f Dockerfile_base .
-# 
-# Author: Oliver Nagy <olitheolix@gmail.com>
 FROM continuumio/anaconda:latest
 MAINTAINER Oliver Nagy <olitheolix@gmail.com>
 
@@ -42,7 +36,7 @@ RUN git clone https://github.com/FEniCS/ffc.git && \
     git clone https://github.com/FEniCS/dolfin.git
 
 # Add the recipes for the Anaconda packages.
-ADD . /tmp/fenics-recipes
+RUN git clone https://github.com/olitheolix/fenics-recipes.git
 
 
 # -------------------------------------------------------------------------
@@ -77,3 +71,46 @@ RUN cd /tmp/fenics-recipes && \
     sed -i -e "s/version:.*/version: $FENICS_ANACONDA_PACKAGE_VERSION/g" ufl/meta.yaml && \
     sed -i -e "s/version:.*/version: $FENICS_ANACONDA_PACKAGE_VERSION/g" dolfin/meta.yaml && \
     sed -i -e "s/version:.*/version: $FENICS_ANACONDA_PACKAGE_VERSION/g" fenics/meta.yaml
+
+
+# -------------------------------------------------------------------------
+# Install additional build dependencies; PETSc requires BLAS/LAPACK
+# and Dolfin needs Scotch.
+# -------------------------------------------------------------------------
+RUN apt-get install -y libblas-dev liblapack-dev libptscotch-dev
+
+
+# -------------------------------------------------------------------------
+# Build the packages from the recipes.
+# -------------------------------------------------------------------------
+WORKDIR /tmp/fenics-recipes
+
+# We build our own Eigen3 and SWIG packages because, currently, the
+# default SWIG in Anaconda is too old and Eigen3 is only available via
+# other channels.
+RUN conda build eigen3 swig --python 2.7 --python 3.4 --no-test
+
+# Build pre-requisite packages for FEniCS.
+RUN conda build --python 2.7 --python 3.4 --no-test petsc
+RUN conda build --python 2.7 --python 3.4 --no-test petsc4py
+RUN conda build --python 2.7 --python 3.4 --no-test slepc
+RUN conda build --python 2.7 --python 3.4 --no-test slepc4py
+
+# Build the FEniCS packages.
+RUN conda build --python 2.7 --python 3.4 --no-test instant ufl fiat ffc
+RUN conda build --python 2.7 --python 3.4 --no-test dolfin
+
+# Meta package that combines all required packages for FEniCS. This
+# will also run the Poisson demo as a test to ensure the FEniCS
+# tool chain works.
+RUN conda build --python 2.7 --python 3.4 fenics
+
+
+# -------------------------------------------------------------------------
+# Print Anaconda.org upload instructions when logging into the container.
+# -------------------------------------------------------------------------
+CMD echo "To upload packages to Anaconda.org:" && \
+    echo "  >> cd /opt/conda/conda-bld/linux-64" && \
+    echo "  >> anaconda login" && \
+    echo "  >> anaconda upload -i eigen3* swig* petsc* slepc* instant* ufl* fiat* ffc* dolfin* fenics*" && \
+    bash
