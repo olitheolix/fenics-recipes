@@ -4,7 +4,7 @@ This repository is a fork of https://github.com/Juanlu001/fenics-recipes.
 
 The aim is to build packages for Python 2 & 3, and move the entire build
 process into a Docker container. Unfortunately, the Python 3 requirement meant
-dropping VTK because it is incompatible with it.
+dropping VTK because it is incompatible.
 
 The main differences are:
 
@@ -26,7 +26,7 @@ out how to distribute via Anaconda. These are BLAS/LAPACK, Scotch, and a
 Fortran compiler. On Ubuntu 14.04 you can install them all with
 `$ apt-get install -y liblapack-dev libptscotch-dev gfortran pkg-config
 
-Then install FEniCS from my Anaconda.org channel:
+Then install FEniCS from my Anaconda.org channel
 `$ conda install -c https://conda.anaconda.org/olitheolix fenics
 
 
@@ -47,7 +47,7 @@ Note: both options build the same packages; Option 1 is simply more convenient
 when you want to tune recipes and build the locally first.
 
 
-### Option 1: Local recipes
+### Option 1: Local Recipes
 
 Clone this repository, modify the recipes (if you want), and then build the two
 containers with these commands:
@@ -60,6 +60,6 @@ need to upgrade first, or rename `Dockerfile_base` to `Dockerfile` and build
 without the `-f` option.
 
 
-### Option 2: recipes from GitHub
+### Option 2: Recipes from GitHub
 Copy the `docker/Dockerfile` somewhere and run
 `$ docker build -t fenics .
