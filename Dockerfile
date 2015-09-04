@@ -44,9 +44,9 @@ RUN conda build --python 2.7 --python 3.4 --no-test fenics
 # -------------------------------------------------------------------------
 # Create test environments and install the FEniCS packages into them.
 # -------------------------------------------------------------------------
-RUN conda create -y -n p27 python=2.7 numpy=1.9 && conda install -n p27 --use-local ffc fiat instant ufl dolfin
-RUN conda create -y -n p34 python=3.4 numpy=1.9 && conda install -n p34 --use-local ffc fiat instant ufl dolfin
+RUN conda create -y -n py27 python=2.7 numpy=1.9 && conda install -n py27 --use-local fenics
+RUN conda create -y -n py34 python=3.4 numpy=1.9 && conda install -n py34 --use-local fenics
 
 # Verify that Dolfin imports without error in both Python versions.
-RUN bash -c "source activate p27 && python -c 'import dolfin'"
-RUN bash -c "source activate p34 && python -c 'import dolfin'"
+RUN bash -c "source activate py27 && python -c 'import dolfin'"
+RUN bash -c "source activate py34 && python -c 'import dolfin'"

@@ -8,6 +8,7 @@ requirements:
     - ffc
     - fiat
     - instant
+    - python
     - ufl
 
   run:
@@ -15,6 +16,7 @@ requirements:
     - ffc
     - fiat
     - instant
+    - python
     - ufl
 
 about:

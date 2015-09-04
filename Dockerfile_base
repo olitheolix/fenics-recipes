@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y \
     nano \
     pkg-config \
     wget
-RUN conda install -y conda-build
+RUN conda install -y conda-build anaconda-client
 
 
 # -------------------------------------------------------------------------
