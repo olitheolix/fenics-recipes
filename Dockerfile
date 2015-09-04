@@ -22,9 +22,9 @@ RUN apt-get install -y libblas-dev liblapack-dev libptscotch-dev
 # -------------------------------------------------------------------------
 WORKDIR /tmp/fenics-recipes
 
-# Build Eigen3 and SWIG from our own recipes. The reason is that the
-# default SWIG in Anaconda is too old and the Eigen3 library is
-# currently only available via other channels.
+# We build our own Eigen3 and SWIG packages because, currently, the
+# default SWIG in Anaconda is too old and Eigen3 is only available via
+# other channels.
 RUN conda build eigen3 swig --python 2.7 --python 3.4 --no-test
 
 # Build pre-requisite packages for FEniCS.
@@ -37,23 +37,17 @@ RUN conda build --python 2.7 --python 3.4 --no-test slepc4py
 RUN conda build --python 2.7 --python 3.4 --no-test instant ufl fiat ffc
 RUN conda build --python 2.7 --python 3.4 --no-test dolfin
 
-# Meta package that combines all required packages for FEniCS.
-RUN conda build --python 2.7 --python 3.4 --no-test fenics
+# Meta package that combines all required packages for FEniCS. This
+# will also run the Poisson demo as a test to ensure the FEniCS
+# tool chain works.
+RUN conda build --python 2.7 --python 3.4 fenics
 
 
 # -------------------------------------------------------------------------
-# Create test environments and install the FEniCS packages into them.
+# Print Anaconda.org upload instructions when logging into the container.
 # -------------------------------------------------------------------------
-RUN conda create -y -n py27 python=2.7 numpy=1.9 && conda install -n py27 --use-local fenics
-RUN conda create -y -n py34 python=3.4 numpy=1.9 && conda install -n py34 --use-local fenics
-
-# Verify that Dolfin imports without error in both Python versions.
-RUN bash -c "source activate py27 && python -c 'import dolfin'"
-RUN bash -c "source activate py34 && python -c 'import dolfin'"
-
-# Print upload instructions when logging into the container.
 CMD echo "To upload packages to Anaconda.org:" && \
     echo "  >> cd /opt/conda/conda-bld/linux-64" && \
     echo "  >> anaconda login" && \
-    echo "  >> anaconda upload eigen3* swig* petsc* slepc* instant* ufl* fiat* ffc* dolfin* fenics*" && \
+    echo "  >> anaconda upload -i eigen3* swig* petsc* slepc* instant* ufl* fiat* ffc* dolfin* fenics*" && \
     bash
