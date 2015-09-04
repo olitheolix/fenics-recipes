@@ -47,7 +47,7 @@ ADD . /tmp/fenics-recipes
 
 # -------------------------------------------------------------------------
 # Specify the FEniCS branch to select specific versions (eg "master" or
-# "1.6.0"), as well as the version given to the Anaconda packages.
+# "1.6.0"), as well as the version string given to the Anaconda packages.
 # -------------------------------------------------------------------------
 ENV FENICS_BRANCH "master"
 ENV FENICS_ANACONDA_PACKAGE_VERSION '"1.7.0dev"'
@@ -58,12 +58,15 @@ ENV FENICS_ANACONDA_PACKAGE_VERSION '"1.7.0dev"'
 # compatible with Python 3 (ie replace some Unicode characters).
 # -------------------------------------------------------------------------
 
-# Check out the specified versions in the Git repos.
-RUN cd /tmp/ffc && git checkout $FENICS_BRANCH && \
-    cd /tmp/fiat && git checkout $FENICS_BRANCH && \
-    cd /tmp/instant && git checkout $FENICS_BRANCH && \
-    cd /tmp/ufl && git checkout $FENICS_BRANCH && \
-    cd /tmp/dolfin && git checkout $FENICS_BRANCH
+# Check out the specified versions in the Git repos. Do nothing if we want
+# the master branch.
+RUN if [ $FENICS_BRANCH != "master" ]; then \
+    cd /tmp/ffc; git checkout ffc-$FENICS_BRANCH; \
+    cd /tmp/fiat; git checkout fiat-$FENICS_BRANCH; \
+    cd /tmp/instant; git checkout instant-$FENICS_BRANCH; \
+    cd /tmp/ufl; git checkout ufl-$FENICS_BRANCH; \
+    cd /tmp/dolfin; git checkout dolfin-$FENICS_BRANCH; \
+fi
 
 # Replace problematic Unicode characters in the FEniCS sources.
 RUN grep -rli 'Alnæs' * | xargs -i@ sed -i 's/Alnæs/Alnaes/g' @ && \
