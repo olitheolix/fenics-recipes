@@ -1,47 +1,62 @@
 # First of two Dockerfile to build Anaconda packages for FEniCS.
 #
-# Build with:
+# Build instructions:
 #   >> docker build -t fenics_base -f Dockerfile_base .
 # 
 # Author: Oliver Nagy <olitheolix@gmail.com>
 FROM continuumio/anaconda:latest
 MAINTAINER Oliver Nagy <olitheolix@gmail.com>
 
-# Admin.
+
+# -------------------------------------------------------------------------
+# Setup
+# -------------------------------------------------------------------------
 ENV HOME /root
 CMD ["/bin/bash"]
 
 # Replace the default shell with Bash.
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-# Install the necessary Ubuntu- and Ancaconda libraries to build packages.
+
+# -------------------------------------------------------------------------
+# Basic dependencies to create Anaconda packages.
+# -------------------------------------------------------------------------
 RUN apt-get update && apt-get install -y \
     build-essential \
+    gfortran \
     git \
     nano \
     pkg-config \
     wget
 RUN conda install -y conda-build
 
-# Download the source files and repositories to /tmp
-WORKDIR /tmp
 
-# Clone the relevant repos from the FEniCS project.
+# -------------------------------------------------------------------------
+# Clone the FEniCS sources and FEniCS recipes.
+# -------------------------------------------------------------------------
+WORKDIR /tmp
 RUN git clone https://github.com/FEniCS/ffc.git && \
     git clone https://github.com/FEniCS/fiat.git && \
     git clone https://github.com/FEniCS/instant.git && \
     git clone https://github.com/FEniCS/ufl.git && \
     git clone https://github.com/FEniCS/dolfin.git
 
-# Replace problematic Unicode characters in the FEniCS sources (only
-# author names at this point). This will avoid a traceback with Python 3.
-RUN grep -rli 'Alnæs' * | xargs -i@ sed -i 's/Alnæs/Alnaes/g' @ && \
-    grep -rli 'Vikstrøm' * | xargs -i@ sed -i 's/Vikstrøm/Vikstrom/g' @
+# Add the recipes for the Anaconda packages.
+ADD . /tmp/fenics-recipes
 
+
+# -------------------------------------------------------------------------
 # Specify the FEniCS branch to select specific versions (eg "master" or
 # "1.6.0"), as well as the version given to the Anaconda packages.
+# -------------------------------------------------------------------------
 ENV FENICS_BRANCH "master"
 ENV FENICS_ANACONDA_PACKAGE_VERSION '"1.7.0dev"'
+
+
+# -------------------------------------------------------------------------
+# Picke the correct FEniCS tag and pre-process the sources to make them
+# compatible with Python 3 (ie replace some Unicode characters).
+# -------------------------------------------------------------------------
 
 # Check out the specified versions in the Git repos.
 RUN cd /tmp/ffc && git checkout $FENICS_BRANCH && \
@@ -50,11 +65,11 @@ RUN cd /tmp/ffc && git checkout $FENICS_BRANCH && \
     cd /tmp/ufl && git checkout $FENICS_BRANCH && \
     cd /tmp/dolfin && git checkout $FENICS_BRANCH
 
-# Add the recipes from the current directory.
-ADD . /tmp/fenics-recipes
+# Replace problematic Unicode characters in the FEniCS sources.
+RUN grep -rli 'Alnæs' * | xargs -i@ sed -i 's/Alnæs/Alnaes/g' @ && \
+    grep -rli 'Vikstrøm' * | xargs -i@ sed -i 's/Vikstrøm/Vikstrom/g' @
 
-# Set the correct version string in all the FEniCS packages we are
-# going to build.
+# Set the version string in FEniCS receipes.
 RUN cd /tmp/fenics-recipes && \
     sed -i -e "s/version:.*/version: $FENICS_ANACONDA_PACKAGE_VERSION/g" ffc/meta.yaml && \
     sed -i -e "s/version:.*/version: $FENICS_ANACONDA_PACKAGE_VERSION/g" fiat/meta.yaml && \
