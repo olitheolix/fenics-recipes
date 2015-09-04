@@ -1,69 +1,65 @@
 # fenics-recipes
 
-This repository contains conda recipes for the FEniCS libraries.
-The recipes work with conda-build, the build system created for
-the Anaconda Python distribution.
+This repository is a fork of https://github.com/Juanlu001/fenics-recipes.
 
-## Installation from binstar (Linux 64bit)
+The aim is to build packages for Python 2 & 3, and move the entire build
+process into a Docker container. Unfortunately, the Python 3 requirement meant
+dropping VTK because it is incompatible with it.
 
-Packages are generated for linux-64 in the juanlu001 binstar channel.
-To install them, just type:
+The main differences are:
 
-`$ conda install fenics mkl --channel juanlu001`
+* Added SLEPc4py
+* VTK is disabled
+* Builds with latest FEniCS v1.7.dev
+* No MKL dependency (system BLAS only)
+* Latest version of PETSc and SLEPc (v3.6)
+* All packages build for Python 2.7 & 3.4 with the same recipes
 
-## Local building
+This repository (and the associated Anaconda packages) are
+experimental - you have been warned :)
 
-The recipes allow for building the packages locally, for later
-fast installation or even redistribution.
 
-```
-$ conda install conda-build
-$ conda build eigen3 swig petsc petsc4py slepc instant ufl fiat ffc dolfin fenics --python 2.7
-$ conda install fenics mkl --use-local
-```
+## Installation from Anaconda.org (Linux 64bit)
 
-Requirements:
+The Anaconda packages require a few system libraries that I could not figure
+out how to distribute via Anaconda. These are BLAS/LAPACK, Scotch, and a
+Fortran compiler. On Ubuntu 14.04 you can install them all with
+`$ apt-get install -y liblapack-dev libptscotch-dev gfortran pkg-config
 
-* GCC (C, C++ and Fortran)
-* Bash (Anaconda only works with this shell)
+Then install FEniCS from my Anaconda.org channel:
+`$ conda install -c https://conda.anaconda.org/olitheolix fenics
 
-## FAQ
 
-### `Error: No packages found matching ...` when installing
+## Building the Packages
 
-You probably forgot to specify the channel, or to add them to your conda
-configuration, as explained above.
+There are two ways to rebuild all the packages yourself. The first one copies
+your local repository into the Docker container and then builds it, the second
+one clones the recipes from GitHub (ie this very repository).
 
-### `ImportError: /lib64/libc.so.6: version 'GLIBC_2.14' not found`
+The first option is useful if you want to alter and test your recipes. The
+second option is a self contained Dockerfile that you can build on eg AWS.
 
-Maybe you installed the latest FEniCS version but your system is too old.
-Try to install FEniCS 1.4.0 from the channel
-https://conda.binstar.org/juanlu001/channel/fenics:1.4.0:centos as explained
-above.
+Either way, afterwards you can log into the container and try out the
+packages. You may also upload them to your own Anaconda.org channel
+(instructions are displayed when you log in).
 
-### `ImportError: ... cannot open shared object file: No such file or directory`
+Note: both options build the same packages; Option 1 is simply more convenient
+when you want to tune recipes and build the locally first.
 
-There is some sort of linking problem in your system. Perhaps you have
-to install some of the Boost system requirements, specially libbz2. To diagnose
-this problem you can use the `ldd` utility:
 
-`ldd <INSTALL_PATH>/anaconda/envs/fenics27/lib/python2.7/site-packages/dolfin/cpp/_common.so`
+### Option 1: Local recipes
 
-### `DOLFIN runtime dependency is not met. Install the following python module: 'ffc' and make sure its location is listed in PYTHONPATH`
+Clone this repository, modify the recipes (if you want), and then build the two
+containers with these commands:
+`$ git clone https://github.com/olitheolix/fenics-recipes.git
+`$ docker build -t fenics_base -f Dockerfile_base .
+`$ docker build -t fenics .
 
-Many times this error has nothing to do with FFC being not installed. Please try
+Note: the `-f` option is only supported in newer versions of Docker. You may
+need to upgrade first, or rename `Dockerfile_base` to `Dockerfile` and build
+without the `-f` option.
 
-`>>> import ffc`
 
-in a Python session to see the real problem.
-
-### My error is not listed above
-
-Please open an issue at https://github.com/juanlu001/fenics-recipes/issues.
-In the meanwhile, you can try and build your own conda packages from the recipes.
-
-## References
-
-* Anaconda Python distribution https://store.continuum.io/cshop/anaconda
-* Introduction of conda-build http://continuum.io/blog/new-advances-in-conda
-* Documentation http://conda.pydata.org/docs/build.html
+### Option 2: recipes from GitHub
+Copy the `docker/Dockerfile` somewhere and run
+`$ docker build -t fenics .
