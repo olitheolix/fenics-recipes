@@ -91,17 +91,17 @@ WORKDIR /tmp/fenics-recipes
 # We build our own Eigen3 and SWIG packages because, currently, the
 # default SWIG in Anaconda is too old and Eigen3 is only available via
 # other channels.
-RUN conda build eigen3 swig --python 2.7 --python 3.4 --no-test
+RUN conda build --python 2.7 --python 3.4 eigen3 swig
 
 # Build pre-requisite packages for FEniCS.
-RUN conda build --python 2.7 --python 3.4 --no-test petsc
-RUN conda build --python 2.7 --python 3.4 --no-test petsc4py
-RUN conda build --python 2.7 --python 3.4 --no-test slepc
-RUN conda build --python 2.7 --python 3.4 --no-test slepc4py
+RUN conda build --python 2.7 --python 3.4 petsc
+RUN conda build --python 2.7 --python 3.4 petsc4py
+RUN conda build --python 2.7 --python 3.4 slepc
+RUN conda build --python 2.7 --python 3.4 slepc4py
 
 # Build the FEniCS packages.
-RUN conda build --python 2.7 --python 3.4 --no-test instant ufl fiat ffc
-RUN conda build --python 2.7 --python 3.4 --no-test dolfin
+RUN conda build --python 2.7 --python 3.4 instant ufl fiat ffc
+RUN conda build --python 2.7 --python 3.4 dolfin
 
 # Meta package that combines all required packages for FEniCS. This
 # will also run the Poisson demo as a test to ensure the FEniCS

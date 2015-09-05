@@ -25,7 +25,7 @@ WORKDIR /tmp/fenics-recipes
 # We build our own Eigen3 and SWIG packages because, currently, the
 # default SWIG in Anaconda is too old and Eigen3 is only available via
 # other channels.
-RUN conda build eigen3 swig --python 2.7 --python 3.4 --no-test
+RUN conda build --python 2.7 --python 3.4 --no-test eigen3 swig
 
 # Build pre-requisite packages for FEniCS.
 RUN conda build --python 2.7 --python 3.4 --no-test petsc
