@@ -1,4 +1,4 @@
-# fenics-recipes
+# FEniCS-Recipes
 
 This repository is a fork of https://github.com/Juanlu001/fenics-recipes.
 
@@ -10,9 +10,9 @@ The main differences are:
 
 * Added SLEPc4py
 * VTK is disabled
-* Builds with latest FEniCS v1.7.dev
 * No MKL dependency (system BLAS only)
 * Latest version of PETSc and SLEPc (v3.6)
+* Supports FEniCS v1.6.0 and v1.7 (bleeding edge)
 * All packages build for Python 2.7 & 3.4 with the same recipes
 
 This repository (and the associated Anaconda packages) are
@@ -66,8 +66,15 @@ without the `-f` option.
 
 ### Option 2: Recipes from GitHub
 Copy one of the available Dockerfiles from the `docker/` directory (no need to
-check out this repo first) and build the container. For instance:
+check out this repo first) and build the container. For instance, to build the
+packages for FEniCS 1.6.0 use
 
 ```
 docker build -t fenics:1.6.0 -f Dockerfile_1.6.0 .
+```
+
+To build the packages with the very latest FEniCS code use
+
+```
+docker build -t fenics:latest -f Dockerfile_master .
 ```
