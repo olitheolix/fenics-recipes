@@ -71,7 +71,7 @@ def main():
     # Define the names of the input/output Dockerfile.
     fname_base = '../Dockerfile_base'
     fname_fenics = '../Dockerfile'
-    fname_out = 'Dockerfile'
+    fname_out = 'Dockerfile_{}'.format(branch)
 
     # Read the Docker files.
     docker_base = open(fname_base, 'r').readlines()
@@ -116,9 +116,11 @@ def main():
         flags=re.MULTILINE
     )
 
+    # Write the Dockerfile and print basic build instructions.
     open(fname_out, 'w').write(dockerfile)
-    print('Created new Dockerfile')
-    print('Build with: >> docker build -t fenics .')
+    print('Wrote build instructions to <{}>'.format(fname_out))
+    print('Build with eg: >> docker build -t fenics:{} -f {} .'
+          .format(branch, fname_out))
 
 
 if __name__ == '__main__':
