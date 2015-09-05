@@ -3,14 +3,14 @@
 export LIBRARY_PATH=$PREFIX/lib
 
 # The configure script requires Python2 to build the make files -
-# Python 3 will not work, but it is possible to build this package for
-# Python 3 as well.
+# Python 3 will not work.
 # 
-# To this, we need to *always* call the configure script with Python2.
-# Once it has generated the make files the package requires no Python
-# at all (neither for building it, nor during runtime).
+# To build an Anaconda package for Python 3 anyway, we need to call the
+# PETSc configure script with Python2. After the configure script
+# generated the make files, Python is not longer necessary (neither
+# for building nor at run-time).
 # 
-# Calling Python 2 this way a hack. It will reliably work in an
+# Calling Python 2 this way is a hack. It will reliably work in an
 # Anaconda2 container, though.
 /opt/conda/bin/python configure \
   --prefix=$PREFIX \
