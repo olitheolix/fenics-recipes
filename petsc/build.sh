@@ -17,7 +17,27 @@ export LIBRARY_PATH=$PREFIX/lib
   --with-blas-lapack-dir=$LIBRARY_PATH \
   --download-suitesparse \
   --with-shared-libraries
-make
+
+# The following construct simply calls make until it either compiles
+# successfully, or has failed 10 times. This somewhat peculiar
+# approach is not necessary when I build bets in a Docker container on
+# my local computer, but when I build the exact same container on an
+# AWS instance then the compilation often (but not always) fails. The
+# output suggests there may be a file system race condition during
+# compilation (PETSc builds itself with multiple threads by default).
+# As a workaround, I will simply attempt to call the 'make' command
+# several times. This appears to fix it.
+i="1"
+until make
+do
+  sleep 0.5
+  i=$[$i+1]
+  if [ $i -gt 5 ]; then
+      exit 1
+  fi
+done
+echo "It took $i attempts to compile PETSc"
+
 make install
 
 # Add more build steps here, if they are necessary.
