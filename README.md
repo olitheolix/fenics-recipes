@@ -65,8 +65,9 @@ without the `-f` option.
 
 
 ### Option 2: Recipes from GitHub
-Copy the `docker/Dockerfile` somewhere and run:
+Copy one of the available Dockerfiles from the `docker/` directory (no need to
+check out this repo first) and build the container. For instance:
 
 ```
-docker build -t fenics .
+docker build -t fenics:1.6.0 -f Dockerfile_1.6.0 .
 ```
