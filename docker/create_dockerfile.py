@@ -27,7 +27,8 @@ def parseCommandLine():
     """
     # Create the parser.
     parser = argparse.ArgumentParser(
-        description=('Create standalone Dockefile'),
+        description=('Create standalone Dockerfiles for '
+                     'individual FEniCS versions'),
         formatter_class=argparse.RawTextHelpFormatter)
 
     # Shorthand.
@@ -35,22 +36,25 @@ def parseCommandLine():
 
     # Add the command line options.
     padd('--branch', metavar='tag/branch', type=str, default='master',
-         help='Which tag/branch name in FEniCS repository to check out')
+         help='Tag/branch of FEniCS repository to use (default=master)')
+    padd('--test', action='store_true', default=False,
+         help='Run the tests during build (default=off)')
 
     # Run the parser.
     param = parser.parse_args()
 
     # Determine the Git branch/tag and the corresponding version tag assigned
     # to the Anaconda packages that will be created.
-    branch = param.branch
-    if branch == 'master':
+    if param.branch == 'master':
         pkg_version = '1.7.0dev'
-    elif branch in ['1.6.0', '1.5.0']:
-        pkg_version = branch
+    elif param.branch == '1.6.0':
+        pkg_version = param.branch
     else:
-        print('Invalid branch name')
+        print('Unsupported branch <{}>'.format(param.branch))
+        sys.exit(1)
 
-    return branch, pkg_version
+    param.pkg_version = pkg_version
+    return param
 
 
 def stripHeader(lines: list):
@@ -66,12 +70,12 @@ def stripHeader(lines: list):
 
 def main():
     # Parse command line for package version information.
-    branch, pkg_version = parseCommandLine()
+    param = parseCommandLine()
 
     # Define the names of the input/output Dockerfile.
     fname_base = '../Dockerfile_base'
     fname_fenics = '../Dockerfile'
-    fname_out = 'Dockerfile_{}'.format(branch)
+    fname_out = 'Dockerfile_{}'.format(param.branch)
 
     # Read the Docker files.
     docker_base = open(fname_base, 'r').readlines()
@@ -102,13 +106,13 @@ def main():
     # Set the correct value for FENICS_BRANCH.
     dockerfile = re.sub(
         r'^ENV FENICS_BRANCH .*',
-        'ENV FENICS_BRANCH "{branch}"'.format(branch=branch),
+        'ENV FENICS_BRANCH "{branch}"'.format(branch=param.branch),
         dockerfile,
         flags=re.MULTILINE
     )
 
     # Set the correct value for FENICS_ANACONDA_PACKAGE_VERSION.
-    version = '\'"{}"\''.format(pkg_version)
+    version = '\'"{}"\''.format(param.pkg_version)
     dockerfile = re.sub(
         r'^ENV FENICS_ANACONDA_PACKAGE_VERSION .*',
         'ENV FENICS_ANACONDA_PACKAGE_VERSION {ver}'.format(ver=version),
@@ -116,11 +120,17 @@ def main():
         flags=re.MULTILINE
     )
 
+    # Deactivate the tests. By default, the build commands in the Dockerfile
+    # use the '--no-test' flag. If the user wants to run the tests during build
+    # then we need to delete it.
+    if param.test is True:
+        dockerfile = dockerfile.replace(' --no-test', '')
+
     # Write the Dockerfile and print basic build instructions.
     open(fname_out, 'w').write(dockerfile)
     print('Wrote build instructions to <{}>'.format(fname_out))
     print('Build with eg: >> docker build -t fenics:{} -f {} .'
-          .format(branch, fname_out))
+          .format(param.branch, fname_out))
 
 
 if __name__ == '__main__':
