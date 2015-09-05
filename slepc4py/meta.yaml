@@ -27,6 +27,10 @@ test:
 
   requires:
     - numpy
+    - petsc
+    - petsc4py
+    - slepc
+    - slepc4py
 
 about:
   home: https://bitbucket.org/petsc/slepc4py/
